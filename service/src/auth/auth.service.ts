@@ -3,10 +3,14 @@ import { SignInDto, SignUpDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as argon from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async signUp(dto: SignUpDto) {
     const hash = await argon.hash(dto.password);
@@ -18,7 +22,8 @@ export class AuthService {
           password: hash,
         },
       });
-      return user;
+
+      return this.signToken(user.id, user.email);
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
@@ -43,8 +48,19 @@ export class AuthService {
       if (!pwMatches) {
         throw new ForbiddenException('凭证不正确');
       } else {
-        return 'token';
+        return this.signToken(user.id, user.email);
       }
     }
+  }
+
+  async signToken(id: number, email: string) {
+    const token = await this.jwtService.signAsync({
+      sub: id,
+      email,
+    });
+
+    return {
+      token,
+    };
   }
 }
