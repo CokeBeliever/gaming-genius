@@ -2,10 +2,10 @@
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "nickname" TEXT NOT NULL,
+    "username" TEXT,
+    "phone" TEXT,
+    "nickname" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -15,9 +15,3 @@ CREATE TABLE "User" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_phone_key" ON "User"("phone");
