@@ -30,5 +30,21 @@ export class AuthService {
     }
   }
 
-  signIn(dto: SignInDto) {}
+  async signIn(dto: SignInDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException('凭证不正确');
+    } else {
+      const pwMatches = await argon.verify(user.password, dto.password);
+      if (!pwMatches) {
+        throw new ForbiddenException('凭证不正确');
+      } else {
+        return 'token';
+      }
+    }
+  }
 }
