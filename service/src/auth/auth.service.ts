@@ -1,28 +1,26 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { SignInDto, SignUpDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as argon from 'argon2';
+import { SignInDto, SignUpDto } from './dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prismaService: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private userService: UserService,
   ) {}
 
   async signUp(dto: SignUpDto) {
     const hash = await argon.hash(dto.password);
 
     try {
-      const user = await this.prismaService.user.create({
-        data: {
-          ...dto,
-          password: hash,
-        },
+      const user = await this.userService.create({
+        ...dto,
+        password: hash,
       });
 
       return this.signToken(user.id, user.email);
@@ -38,11 +36,8 @@ export class AuthService {
   }
 
   async signIn(dto: SignInDto) {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        email: dto.email,
-      },
-    });
+    const user = await this.userService.getByEmail(dto.email);
+
     if (!user) {
       throw new ForbiddenException('凭证不正确');
     } else {
@@ -67,7 +62,7 @@ export class AuthService {
     });
 
     return {
-      token,
+      token: `Bearer ${token}`,
     };
   }
 }
