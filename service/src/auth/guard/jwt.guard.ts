@@ -9,7 +9,7 @@ import { IS_PUBLIC_KEY } from '../decorator';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {
     super();
   }
