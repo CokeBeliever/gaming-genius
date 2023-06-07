@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Post,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { EditUserDto } from './dto';
@@ -15,7 +15,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Post(':id')
+  @Put(':id')
   editById(@Param('id', ParseIntPipe) id: number, @Body() dto: EditUserDto) {
     return this.userService.editById(id, dto);
   }
