@@ -1,18 +1,10 @@
 version: '3.8'
 services:
-  dev-db:
+  db:
     image: postgres:13
     ports:
-      - 5434:5432
+      - ${DATABASE_PORT}:5432
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: gaming_genius
-  test-db:
-    image: postgres:13
-    ports:
-      - 5435:5432
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: gaming_genius
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
