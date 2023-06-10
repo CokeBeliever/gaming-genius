@@ -20,12 +20,16 @@ export class UserService {
     });
   }
 
-  editById(id: number, dto: EditUserDto) {
-    return this.prismaService.user.update({
+  async editById(id: number, dto: EditUserDto) {
+    const user = await this.prismaService.user.update({
       where: {
         id,
       },
       data: dto,
     });
+
+    delete user.password;
+
+    return user;
   }
 }

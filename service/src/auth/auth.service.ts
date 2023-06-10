@@ -23,7 +23,12 @@ export class AuthService {
         password: hash,
       });
 
-      return this.signToken(user.id, user.email);
+      delete user.password;
+
+      return {
+        user,
+        token: await this.signToken(user.id, user.email),
+      };
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
@@ -45,7 +50,12 @@ export class AuthService {
       if (!pwMatches) {
         throw new ForbiddenException('凭证不正确');
       } else {
-        return this.signToken(user.id, user.email);
+        delete user.password;
+
+        return {
+          user,
+          token: await this.signToken(user.id, user.email),
+        };
       }
     }
   }
@@ -61,8 +71,6 @@ export class AuthService {
       expiresIn: '1h',
     });
 
-    return {
-      token: `Bearer ${token}`,
-    };
+    return `Bearer ${token}`;
   }
 }
