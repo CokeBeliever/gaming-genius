@@ -7,11 +7,11 @@
   "license": "UNLICENSED",
   "scripts": {
     "prisma:deploy:dev": "prisma migrate deploy",
-    "docker:up:dev": "docker compose -p dev-service up -d && sleep 2 && pnpm run prisma:deploy:dev",
+    "docker:up:dev": "docker compose -p dev-service up -d",
     "docker:rm:dev": "docker compose -p dev-service rm -f -s -v ",
     "docker:restart:dev": "pnpm run docker:rm:dev && pnpm run docker:up:dev",
     "prisma:deploy:test": "dotenv -e .env.test -- prisma migrate deploy",
-    "docker:up:test": "dotenv -e .env.test -- docker compose -p test-service up -d && sleep 2 && pnpm run prisma:deploy:test",
+    "docker:up:test": "dotenv -e .env.test -- docker compose -p test-service up -d",
     "docker:rm:test": "dotenv -e .env.test -- docker compose -p test-service rm -f -s -v",
     "docker:restart:test": "pnpm run docker:rm:test && pnpm run docker:up:test",
     "build": "nest build",
